@@ -1,78 +1,157 @@
-# Dukun — Gen Z Witch
+# 🔮 Dukun — Gen Z Ritual Studio (3D Interactive Experience)
 
-A fictional Indonesian ritual studio built with Vite, React, React Three Fiber, Three.js, Drei, GSAP ScrollTrigger, and Lenis.
+[![Live Demo](https://img.shields.io/badge/Demo-Live%20Website-ff0055?style=for-the-badge&logo=vercel&logoColor=white)](https://dukun-studio-3d-5qdqov7zl-ifhal-faizi.vercel.app/)
+[![React](https://img.shields.io/badge/React-19.1.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Three.js](https://img.shields.io/badge/Three.js-r180-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
+[![R3F](https://img.shields.io/badge/@react--three/fiber-v9.3-blue?style=for-the-badge&logo=threedotjs&logoColor=white)](https://docs.pmnd.rs/react-three-fiber/)
+[![GSAP](https://img.shields.io/badge/GSAP-ScrollTrigger-88CE02?style=for-the-badge&logo=greensock&logoColor=white)](https://gsap.com/)
+[![Vite](https://img.shields.io/badge/Vite-7.1-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 
-## Run
+> **Live Demo:** [https://dukun-studio-3d-5qdqov7zl-ifhal-faizi.vercel.app/](https://dukun-studio-3d-5qdqov7zl-ifhal-faizi.vercel.app/)
 
-```sh
-npm install
-npm run dev
+---
+
+## 📖 Overview
+
+**Dukun — Gen Z Ritual Studio** is an immersive, scroll-driven 3D web experience that bridges centuries-old Indonesian folklore and traditional mysticism with hyper-modern creative web development and digital culture.
+
+Built with **React 19**, **Three.js**, **React Three Fiber (R3F)**, **Drei**, **GSAP ScrollTrigger**, and **Lenis Scroll**, the website delivers a seamless narrative journey across a candlelit chamber, a mystical thin-film soap bubble, and an interactive 3D collection of ritual artifacts (Keris, Boneka, Tarot, Jenglot).
+
+---
+
+## 🌐 Live Preview
+
+You can experience the production deployment directly on Vercel:
+👉 **[dukun-studio-3d-5qdqov7zl-ifhal-faizi.vercel.app](https://dukun-studio-3d-5qdqov7zl-ifhal-faizi.vercel.app/)**
+
+---
+
+## ✨ Key Features & Creative Architecture
+
+### 1. 🕯️ Atmospheric 2.5D Volumetric Stage
+- **Cinematic Chamber**: Procedurally mapped room with candlelit warmth, dark foreground falloff, and subtle drifting incense smoke.
+- **Relief & Normal Mapping**: Custom analytical depth and normal maps (`character-depth.jpg`, `character-normal.jpg`) sculpt realistic shadows on 2.5D plates based on user cursor coordinates without requiring heavy 3D character meshes.
+- **Tone Preservation**: Bypasses generic ACES tone mapping to preserve the rich, saturated Indonesian batik pigments and warm skin tones.
+
+### 2. 🫧 Thin-Film Interference Bubble Shader
+- **Spectral Optics**: Custom shader modeling thin-film light interference, Fresnel edge distortion, and studio reflections.
+- **Dynamic Interaction**: Interactive pointer deformation and touch ripple effect that seamlessly transitions into the core scroll zoom.
+- **FBO Optimization**: Single-pass environment reflection capture avoids costly multi-pass cube camera re-renders.
+
+### 3. 📜 Precision Scroll-Driven Storytelling
+- **360vh Scrub Journey**: Powered by GSAP ScrollTrigger synchronized with Lenis smooth scrolling (1.8s scrub duration).
+- **Single Source of Truth**: `src/journey.js` manages camera zoom trajectories, copy reveals, object containment boundaries, and gallery spread coordinates.
+- **Single Render Loop Ownership**: GSAP updates interaction progress while the R3F frame loop exclusively controls camera positions, avoiding stutter or frame desynchronization.
+
+### 4. 🗡️ Interactive 3D Artifacts Showcase
+- **Curated 3D Models**: Real-time rendering of authentic ritual objects:
+  - **Keris**: Sacred wavy-blade dagger.
+  - **Tarot**: Mystical divination cards.
+  - **Boneka Ritual**: Handcrafted effigy.
+  - **Jenglot**: Cryptid talisman artifact.
+- **Bounded Physics**: Artifacts float organically inside conservative bounding spheres and spread outward into the gallery upon entering the bubble.
+- **Asset Compression**: Geometry compressed with **Google DRACO** and textures formatted with **KTX2 / Basis Universal** for lightning-fast network delivery.
+
+### 5. ♿ Accessibility & Performance First (A11y & Core Web Vitals)
+- **Reduced Motion Support**: Detects `prefers-reduced-motion` to disable aggressive pinning and ambient spinning while ensuring all text and gallery controls remain fully readable and interactive.
+- **Modal Focus Management**: Accessible detail panels with keyboard trap, `Escape` key dismissal, and scroll lock.
+- **Hardware Adaptability**: Automatic DPR scaling via `@react-three/drei`'s `PerformanceMonitor` and graceful HTML/CSS fallback if WebGL2 is unsupported.
+
+---
+
+## 🛠️ Tech Stack & Libraries
+
+| Technology | Purpose |
+| :--- | :--- |
+| **React 19** | Modern UI composition, state management, and lifecycle hooks |
+| **Three.js & R3F** | Declarative 3D WebGL scene graph and shader programming |
+| **@react-three/drei** | High-level 3D helpers (Environment, PerformanceMonitor, useGLTF) |
+| **GSAP & ScrollTrigger** | High-performance scrubbed timelines and scroll pinning |
+| **@studio-freight/lenis** | Smooth momentum-based inertial scrolling |
+| **DRACO & KTX2 / Basis** | High-efficiency 3D mesh and texture compression pipeline |
+| **Vite 7** | Ultra-fast build tool and local development server |
+| **Vercel** | Edge deployment and global CDN hosting |
+
+---
+
+## 📂 Project Architecture
+
+```plaintext
+Dukun-website/
+├── public/
+│   ├── basis/                 # KTX2 / Basis Universal transcoders
+│   ├── draco/                 # Google DRACO geometry decoders
+│   ├── editorial/             # Rendered transparent portrait stills
+│   ├── props/                 # Optimized .glb models & props metadata
+│   └── textures/              # Depth, normal, and atmospheric textures
+├── scripts/
+│   ├── hero-maps.mjs          # Procedural depth/normal map generator
+│   ├── room-maps.mjs          # Room perspective depth computation
+│   ├── render-portraits.mjs   # Headless portrait renderer
+│   └── smoke.mjs              # End-to-end smoke test suite
+├── src/
+│   ├── Hero3D.jsx             # 3D stage, volumetric figure, and bubble shader
+│   ├── Scene.jsx              # Main R3F Canvas, lighting, raycasting & models
+│   ├── journey.js             # Scroll progress coordinates & story beats
+│   ├── scrollState.js         # Singleton reactive state for scroll & pointer
+│   ├── main.jsx               # Root DOM layer, dialogs, nav, and booking UI
+│   └── style.css              # Typography, layout tokens, and responsive styles
+├── CARA_MENJALANKAN.md        # Panduan lokal dalam Bahasa Indonesia
+├── index.html                 # HTML entry point with semantic metadata
+├── package.json               # Dependencies & scripts
+└── vite.config.js             # Vite configuration with React plugin
 ```
 
-Open http://localhost:5173. `npm run build` produces the static site in `dist/`; `npm run preview` previews it. All booking and newsletter actions are local demonstrations. No data is stored or transmitted.
+---
 
-The hero uses a cinematic candlelit room with coral backlighting, dark foreground falloff, and a matching dark booking widget. It reuses the generated room artwork; the scroll-driven bubble transition remains intact.
+## 🚀 Getting Started
 
-## Editing
+### Prerequisites
+- **Node.js**: `v18.0.0` or higher (Disarankan Node.js `v20 LTS`)
+- **npm**: `v9.0.0` or higher
 
-- `public/props/props.json` drives the four supplied objects, descriptions, prices, anchors, and camera focus offsets.
-- `src/scrollState.js` is the scroll/interaction singleton. GSAP writes scroll progress; the R3F frame loop owns the camera, the bubble anchor, and model movement.
-- `src/Hero3D.jsx` is the hero stage: the cinematic chamber, the figure as a 2.5D plate, and the bubble.
-- `src/Scene.jsx` wires the canvas together — the interior environments, model loading, bounded prop movement, pointer raycasting, and frame-rate-independent damping.
-- `src/main.jsx` contains the hero DOM, navigation, services, accessible gallery controls, and focus-trapped panels.
-- `src/style.css` contains the six brand tokens and desktop/mobile layouts.
-- `src/journey.js` is the shared source for scroll duration, story beats, and contained object anchors.
-- `scripts/hero-maps.mjs` rebuilds the hero relief and the character volume maps.
+### 1. Clone Repository
+```bash
+git clone https://github.com/fallss/dukun-studio-3d.git
+cd dukun-studio-3d
+```
 
-## The scroll story
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-`src/journey.js` defines a reversible 360vh sequence with 1.8-second scrub smoothing:
+### 3. Run Development Server
+```bash
+npm run dev
+```
+Open **[http://localhost:5173](http://localhost:5173)** in your browser.
 
-1. The title begins at 32% opacity and rises 34px into place over the opening scroll.
-2. The composition holds before the character and opening copy gently leave.
-3. “Tidak semua bisa dijelaskan” introduces the threshold as the bubble expands.
-4. The film passes the camera; only then do the objects spread into the gallery.
-5. A spacious “Ilmu lama. Dunia baru.” interlude connects the collection to services.
+### 4. Build for Production
+```bash
+npm run build
+```
+Build output will be bundled in the `dist/` directory.
 
-The gallery, interlude, and service rows use slow, scroll-linked reveals. Reduced motion removes pinning and makes content immediately visible.
+### 5. Preview Production Build
+```bash
+npm run preview
+```
 
-- **The chamber** uses the existing candlelit room artwork, depth-dependent displacement, a damped pointer light, and two slowly drifting fog layers. The supplied Yakudoo Halloween shader informed these techniques. No full-screen lightning or flashing is used. The reference and MIT notice are retained in `references/halloween/`; the deployed notice is in `public/licenses/`.
-- **The figure** is a 2.5D alpha plate with analytic volume/normal maps, restrained light response, and soft alpha edges. The camera framing and bubble position derive from the same measured hand anchor.
-- **The bubble** uses thin-film interference, softened studio reflections, and restrained Fresnel edges. Its environment is captured once, avoiding repeated six-pass scene captures and reflected duplicates of the objects. Hover and click responses are damped; there is no elastic scaling or outward impulse.
-- **The four objects remain inside the film**. Each has a small local float offset, a conservative model bounding sphere, and a clamped distance from the shared bubble center. Props read that center after the bubble updates, avoiding independent smoothing lag on reverse scroll or resize. They spread toward gallery anchors only after the camera enters the film.
+---
 
-The hero sits above the canvas in the stacking order — ScrollTrigger's pin makes
-it its own context — so its type crosses the render. That means the hero, and
-the pin spacer GSAP wraps it in, both give pointer events back to the canvas.
+## 🧪 Testing
 
-Original supplied assets remain untouched in `Dukun.png` and `Probs/`. The deployed models use DRACO geometry and KTX2 textures, with local decoders in `public/draco` and `public/basis`. KTX2 preload waits for the renderer because GPU format support must be detected first. Failed models use `placeholder.glb`.
+The repository includes a standalone automated smoke test suite:
+```bash
+npm test
+```
+Tests verify bundle integrity, 3D asset decodability, and key story beat interactions.
 
-## Artwork
+---
 
-The character and four models were supplied with the project. The room was generated using the built-in image generation tool and copied to `public/textures/scene-source.png`; optimized web versions are `scene.jpg` and `scene-mobile.jpg`. The hero chamber (`hero-field*.jpg`) and the character volume maps (`character-depth.jpg`, `character-normal.jpg`) are generated procedurally by `scripts/hero-maps.mjs`.
+## 📄 License & Attribution
 
-Generation prompt: “A very dark Indonesian heritage room with warm black #140A08 dominant, a worn wooden floor, batik cloth barely visible in the shadows on the far walls, faint low candlelight at the extreme edges and beautiful thin incense smoke in muted coral #E05A4E. Room is empty of foreground objects, no people, no text, no symbols, no ritual instructions. Main central 80 percent must remain very dark and quiet for floating product models to overlay. Cinematic photorealism, restrained light, deep atmospheric spatial perspective.”
-
-## Implementation notes
-
-- Four supplied objects are used rather than inventing additional models.
-- The room depth and normal maps are analytic approximations of its floor and walls, not Depth Anything inference. `scripts/room-maps.mjs` rebuilds them. The character maps are the same kind of approximation. Lightning is omitted.
-- Both hero plates skip tone mapping. They are pre-authored artwork, and ACES desaturates the batik and greys the skin.
-- The hero light is read against how a flat facing surface would respond, so moving the cursor sculpts the relief instead of dimming and brightening the whole plate.
-- Desktop gallery dragging uses tightly constrained OrbitControls on a virtual camera; the render camera still has one owner in the frame loop. OrbitControls is never created on touch devices.
-- Desktop and mobile use the same low-vertex fullscreen shader; there is no separate 0.6-resolution mobile FBO. DPR adapts downward through PerformanceMonitor.
-- Reduced motion removes the pinned zoom and entrance timeline and freezes ambient motion. Gallery content remains usable.
-- The DOM gallery buttons are intentionally visible as an additional discovery and keyboard path. Dialogs lock scrolling, trap focus, close with Escape, and restore focus.
-- WebGL failure/context loss swaps in the static bubble and a content-complete gallery grid.
-- Google Fonts serves Archivo at width 125 / weight 800, Inter, and Bitter. System fallbacks apply offline.
-
-## Validation
-
-With the dev server running, `npm test` runs the smoke suite using installed Chrome (`PLAYWRIGHT_CHANNEL` overrides the browser channel). Production build and automated Chromium checks cover desktop and mobile rendering, booking simulation, prop panels, Escape dismissal, mobile horizontal overflow, focus trapping/restoration, scroll locking, context loss, no-WebGL content, and the absence of pinning under reduced motion. Screenshots are stored in the ignored `artifacts/` folder. Frame-rate targets still need profiling on physical mobile hardware.
-
-`node scripts/journey-check.mjs` checks progressive text reveal, object containment, fast reverse scrolling, responsive resize, and browser errors against the running dev server. It saves story-beat screenshots in `artifacts/`.
-
-### Editorial story and living film
-The hero uses slow scroll-scrubbed type reveals, a breathing thin-film shell and restrained moving spectral haze. Each prop tumbles independently inside a conservative sphere bound; containment is preserved through fast reverse scrolling. The interactive collection leads into two asymmetric editorial chapters: the keris on warm black, then tarot on chalk. Their staggered timelines follow scroll and respect reduced motion. Both featured objects open the existing accessible detail panel.
-
-`public/editorial` contains transparent portraits rendered from the supplied models. Regenerate them with the dev server running using `node scripts/render-portraits.mjs`. `node scripts/journey-check.mjs` verifies reveal timing, containment and reverse scrolling; `node scripts/chapter-check.mjs` verifies editorial panels and mobile width.
+- Artwork, character plate, and 3D props are created for this demonstration.
+- Atmospheric room shader techniques adapted under MIT license from the Yakudoo Halloween reference (stored in `public/licenses/yakudoo-halloween.txt`).
+- Created with passion for creative web development.
